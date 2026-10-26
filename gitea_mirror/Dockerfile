@@ -5,11 +5,11 @@ ARG BUILD_FROM=ghcr.io/home-assistant/base:3.24-2026.10.1
 # because the app is meant to run on the Home Assistant base image with bashio and s6-overlay.
 # renovate: datasource=docker depName=ghcr.io/raylabshq/gitea-mirror
 ARG GITEA_MIRROR_VERSION=v3.46.0
-FROM ghcr.io/raylabshq/gitea-mirror:${GITEA_MIRROR_VERSION} AS gitea-mirror
-
 # The runtime in its Alpine (musl) build; upstream runs on the same bun release.
 # renovate: datasource=docker depName=docker.io/oven/bun
 ARG BUN_VERSION=1.3.14-alpine
+
+FROM ghcr.io/raylabshq/gitea-mirror:${GITEA_MIRROR_VERSION} AS gitea-mirror
 FROM docker.io/oven/bun:${BUN_VERSION} AS bun
 
 FROM ${BUILD_FROM}
