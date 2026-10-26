@@ -2,7 +2,7 @@
 <h1 align="center">Gitea Mirror</h1>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/seb5594/Home-Assistant-Gitea-Mirror-App/main/gitea_mirror/logo.png" alt="Gitea Mirror" width="201" height="160">
+  <img src="https://raw.githubusercontent.com/seb5594/Home-Assistant-Gitea-Mirror-App/dev/gitea_mirror/logo.png" alt="Gitea Mirror" width="201" height="160">
 </p>
 
 ---
@@ -17,7 +17,7 @@
   <img src="https://img.shields.io/static/v1?label=ingress&amp;message=enabled&amp;color=7C3AED&amp;style=flat" alt="ingress" height="20"><br>
   <a href="https://github.com/seb5594/Home-Assistant-Apps/stargazers"><img src="https://img.shields.io/github/stars/seb5594/Home-Assistant-Gitea-Mirror-App?label=stars&amp;style=flat" alt="stars" height="20"></a>
   <a href="https://github.com/seb5594/Home-Assistant-Apps/issues"><img src="https://img.shields.io/github/issues/seb5594/Home-Assistant-Gitea-Mirror-App?label=issues&amp;style=flat" alt="issues" height="20"></a>
-  <a href="https://github.com/seb5594/Home-Assistant-Gitea-Mirror-App/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/seb5594/Home-Assistant-Gitea-Mirror-App/ci.yml?branch=main&amp;label=checks&amp;style=flat" alt="checks" height="20"></a>
+  <a href="https://github.com/seb5594/Home-Assistant-Gitea-Mirror-App/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/seb5594/Home-Assistant-Gitea-Mirror-App/ci.yml?branch=dev&amp;label=checks&amp;style=flat" alt="checks" height="20"></a>
   <a href="https://github.com/seb5594/Home-Assistant-Apps#license"><img src="https://img.shields.io/github/license/seb5594/Home-Assistant-Gitea-Mirror-App?label=license&amp;style=flat" alt="license" height="20"></a>
 </p>
 <!-- header:end -->
