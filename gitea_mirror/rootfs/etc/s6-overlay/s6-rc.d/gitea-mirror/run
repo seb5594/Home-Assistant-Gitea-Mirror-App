@@ -1,0 +1,150 @@
+#!/usr/bin/with-contenv bashio
+# shellcheck shell=bash
+# shellcheck source-path=SCRIPTDIR
+# Translates the app options into the environment of Gitea Mirror, prepares its data and keeps
+# the application running behind Home Assistant's ingress.
+
+# Bashio debug output would print Supervisor replies.
+bashio::log.level info
+
+log_info() { bashio::log.info "$*"; }
+log_warning() { bashio::log.warning "$*"; }
+log_error() { bashio::log.error "$*"; }
+
+LIB=/usr/lib/gitea-mirror
+# shellcheck source=../../../../usr/lib/gitea-mirror/common.sh
+source "${LIB}/common.sh"
+# shellcheck source=../../../../usr/lib/gitea-mirror/environment.sh
+source "${LIB}/environment.sh"
+# shellcheck source=../../../../usr/lib/gitea-mirror/gitea.sh
+source "${LIB}/gitea.sh"
+
+APP_DIR=/app
+DATA_DIR=/data
+DATABASE="${DATA_DIR}/gitea-mirror.db"
+SERVER=/usr/share/gitea-mirror/ingress-server.ts
+# Set by the watcher when the application has to start again to pick up its new configuration.
+RESTART_FLAG=/run/gitea-mirror/restart
+
+APP_PID=""
+WATCHER_PID=""
+
+# as_app <command...>
+# Runs a command as the application's own user with the environment prepared by render_environment.
+as_app() {
+  s6-envdir "$ENV_DIR" s6-setuidgid gitea-mirror "$@"
+}
+
+prepare_data_directory() {
+  mkdir -p "${DATA_DIR}/home"
+  # Files from an older run or a restore may belong to someone else. The options stay with the Supervisor.
+  find "$DATA_DIR" -mindepth 1 -not -name options.json ! -user gitea-mirror -exec chown gitea-mirror:gitea-mirror {} +
+}
+
+# has_account
+# True once someone has created an account; the configuration from the options is written for the first one.
+has_account() {
+  [[ -s "$DATABASE" ]] && [[ "$(sqlite3 -readonly "$DATABASE" 'SELECT EXISTS (SELECT 1 FROM users)' 2>/dev/null)" == "1" ]]
+}
+
+# run_startup_task <description> <script> [argument...]
+# One of the maintenance scripts of the application. A failure is reported and does not stop the start.
+run_startup_task() {
+  local description="$1" script="$2" status=0
+  shift 2
+  as_app bun "${APP_DIR}/dist/scripts/${script}.js" "$@" || status=$?
+  if ((status != 0)); then
+    log_warning "${description} ended with exit code ${status}."
+  fi
+}
+
+# run_startup_tasks
+# The official image runs these at every start: write the configuration from the environment,
+# resume interrupted jobs and repair the state of mirrors. On the very first start there is
+# nothing to resume or repair, which saves three runs of the runtime.
+run_startup_tasks() {
+  if [[ ! -s "$DATABASE" ]]; then
+    log_info "First start: the database is created now."
+    return 0
+  fi
+  if has_connection_settings && has_account; then
+    run_startup_task "Applying the options to the configuration" startup-env-config
+  fi
+  run_startup_task "Recovery of interrupted jobs" startup-recovery --timeout=30000
+  run_startup_task "Repair of mirror states" repair-mirrored-repos --startup
+}
+
+# watch_first_account
+# The options reach the configuration of the first account. With sign-in through Home Assistant
+# that account appears when the page is opened for the first time, so the options are applied
+# then, and the application starts again to read them.
+watch_first_account() {
+  until has_account; do
+    sleep 10
+  done
+  log_info "The first account exists. Applying the options to its configuration."
+  run_startup_task "Applying the options to the configuration" startup-env-config
+  touch "$RESTART_FLAG"
+  kill -TERM "$APP_PID" 2>/dev/null || true
+}
+
+start_application() {
+  rm -f "$RESTART_FLAG"
+  cd "$APP_DIR" || exit 1
+  as_app bun "$SERVER" &
+  APP_PID=$!
+  if has_connection_settings && ! has_account; then
+    watch_first_account &
+    WATCHER_PID=$!
+  fi
+}
+
+# Called through the trap in main.
+# shellcheck disable=SC2317,SC2329
+stop_all() {
+  local pid
+  for pid in "$WATCHER_PID" "$APP_PID"; do
+    if [[ -n "$pid" ]]; then
+      kill "$pid" 2>/dev/null || true
+    fi
+  done
+  wait 2>/dev/null || true
+}
+
+main() {
+  local entry upstream
+  entry="$(bashio::addon.ingress_entry)"
+  if [[ -z "$entry" ]]; then
+    log_error "Home Assistant did not tell the ingress path of this app, so the page cannot be served."
+    exit 1
+  fi
+  upstream="$(jq -r '.version' "${APP_DIR}/package.json")"
+  log_info "Starting Gitea Mirror $(cat "$VERSION_FILE") (application ${upstream})"
+
+  mkdir -p "$(dirname "$RESTART_FLAG")"
+  prepare_data_directory
+  render_environment "$entry" "$upstream" "$DATA_DIR"
+  check_destination
+  run_startup_tasks
+
+  trap 'stop_all; exit 0' TERM INT
+  local status=0
+  while true; do
+    start_application
+    wait "$APP_PID" || status=$?
+    if [[ -n "$WATCHER_PID" ]]; then
+      kill "$WATCHER_PID" 2>/dev/null || true
+    fi
+    WATCHER_PID=""
+    if [[ -f "$RESTART_FLAG" ]]; then
+      log_info "Starting the application again with its configuration."
+      status=0
+      continue
+    fi
+    break
+  done
+  log_error "The application stopped (exit code ${status})."
+  exit "$status"
+}
+
+main "$@"

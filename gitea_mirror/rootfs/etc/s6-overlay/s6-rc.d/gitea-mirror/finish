@@ -1,0 +1,9 @@
+#!/usr/bin/with-contenv bashio
+# shellcheck shell=bash
+# When the service ends with an error, stop the whole app. The Supervisor then shows it as
+# stopped, instead of s6 restarting the service in a loop.
+
+if [[ "${1:-0}" -ne 0 && "${1:-0}" -ne 256 ]]; then
+  bashio::log.warning "Gitea Mirror stopped (exit code ${1}); stopping the app."
+  /run/s6/basedir/bin/halt
+fi

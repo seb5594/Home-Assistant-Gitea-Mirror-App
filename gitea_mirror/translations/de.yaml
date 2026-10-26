@@ -1,0 +1,333 @@
+configuration:
+  source:
+    name: Quelle
+    description: Woher die zu spiegelnden Repositories kommen.
+    fields:
+      provider:
+        name: Quell-Dienst
+        description: Der Dienst, von dem die Repositories kommen. GitHub ist der unterstützte Weg; GitLab und Gitea/Forgejo (auch Codeberg) sind Beta. Nach dem Import von Repositories lässt sich das nicht mehr ändern.
+      url:
+        name: Adresse der Quelle
+        description: Adresse der GitLab- oder Gitea/Forgejo-Instanz, zum Beispiel https://gitlab.example.com. Bei GitHub wird sie ignoriert. Standard ist https://gitlab.com bzw. https://codeberg.org.
+      username:
+        name: Benutzername
+        description: Dein Kontoname beim Quell-Dienst.
+      token:
+        name: Zugriffstoken
+        description: Persönliches Zugriffstoken des Quell-Kontos. GitHub braucht die Berechtigungen repo und admin:org, GitLab read_api und read_repository, Gitea/Forgejo read:repository, read:user und read:organization.
+      account_type:
+        name: Kontotyp
+        description: Ob das Quell-Konto ein persönliches Konto oder eine Organisation ist.
+      github_api_url:
+        name: GitHub-API-Adresse
+        description: "Nur für GitHub Enterprise: https://ghe.example.com/api/v3 (Server) oder https://api.TENANT.ghe.com (Cloud mit Datenresidenz). Für github.com leer lassen."
+      include_private:
+        name: Private Repositories
+        description: Private Repositories einbeziehen.
+      include_public:
+        name: "Öffentliche Repositories"
+        description: "Öffentliche Repositories einbeziehen."
+      include_archived:
+        name: Archivierte Repositories
+        description: Archivierte Repositories einbeziehen.
+      include_collaborator_repos:
+        name: Repositories, bei denen du mitarbeitest
+        description: Repositories einbeziehen, die anderen gehören und bei denen du Mitarbeiter bist. Ausschalten, um nur eigene zu importieren.
+      skip_forks:
+        name: Forks überspringen
+        description: Geforkte Repositories auslassen.
+      mirror_starred:
+        name: Mit Stern markierte spiegeln
+        description: Auch die Repositories importieren, die du mit einem Stern markiert hast.
+      starred_lists:
+        name: Sternlisten
+        description: "Nur mit markierten Repositories: Namen der GitHub-Sternlisten, durch Komma getrennt. Leer bedeutet alle markierten Repositories."
+      starred_org:
+        name: Organisation für markierte Repositories
+        description: Gitea-Organisation, die die markierten Repositories aufnimmt. Standard der App ist starred.
+      starred_mode:
+        name: Aufbau der markierten Repositories
+        description: dedicated-org legt alle in eine Organisation, preserve-owner behält den ursprünglichen Besitzer als Organisation.
+      starred_duplicate_strategy:
+        name: Namensgleiche markierte Repositories
+        description: "Was passiert, wenn zwei markierte Repositories gleich heißen: suffix ergibt repo-owner, prefix ergibt owner-repo, owner-org nimmt den Besitzer als Organisation."
+      skip_starred_issues:
+        name: Markierte Repositories schlank halten
+        description: Issues markierter Repositories überspringen, spart Zeit und Anfragen.
+      auto_mirror_starred:
+        name: Markierte automatisch spiegeln
+        description: "Markierte Repositories bei geplanten Läufen und \"Alle spiegeln\" mitspiegeln. Aus bedeutet: nur zum Ansehen importiert, einzeln spiegeln."
+      mirror_organizations:
+        name: Organisationen spiegeln
+        description: Auch die Repositories deiner Organisationen spiegeln.
+      only_mirror_orgs:
+        name: Nur Organisationen
+        description: Persönliche Repositories überspringen und nur Organisations-Repositories spiegeln.
+      include_organizations:
+        name: Erlaubte Organisationen
+        description: Nur diese Organisationen spiegeln, durch Komma getrennt. Leer bedeutet alle Organisationen, in denen du Mitglied bist.
+      excluded_organizations:
+        name: Ausgeschlossene Organisationen
+        description: Organisationen, die ausgelassen werden, durch Komma getrennt.
+      preserve_org_structure:
+        name: Organisationsstruktur beibehalten
+        description: Dieselben Organisationen in Gitea anlegen. Wird vom Aufbau darunter überstimmt, wenn der gesetzt ist.
+      mirror_strategy:
+        name: Aufbau in Gitea
+        description: preserve behält die Organisationen der Quelle, single-org legt alles in eine Organisation, flat-user legt alles unter den Gitea-Benutzer, mixed hält persönliche Repositories in einer Organisation und Organisations-Repositories in ihren eigenen.
+  destination:
+    name: Ziel
+    description: Wo die Spiegel angelegt werden. Standard ist die Gitea-App von alexbelgium.
+    fields:
+      provider:
+        name: Ziel-Dienst
+        description: Wo die Spiegel angelegt werden. Gitea und Forgejo holen den Code selbst; GitHub und GitLab bekommen Pushes von dieser App und sind Beta.
+      url:
+        name: Zieladresse
+        description: Adresse deines Gitea. Standard ist die Gitea-App von alexbelgium. Für eine andere App http://<Hostname>:3000, für ein Gitea anderswo zum Beispiel https://git.example.com. Eine hier gesetzte Adresse wird bei jedem Start übernommen; leeren, um sie in der App zu verwalten.
+      external_url:
+        name: Adresse für Links
+        description: Adresse, unter der dein Browser Gitea erreicht, für Links im Dashboard. Leer übernimmt die Adresse, die Gitea selbst meldet (ihre ROOT_URL).
+      username:
+        name: Benutzername
+        description: Gitea-Konto, dem die Spiegel gehören. Leer wird es aus dem Zugriffstoken ermittelt.
+      token:
+        name: Zugriffstoken
+        description: Zugriffstoken dieses Kontos (Gitea > Einstellungen > Anwendungen). Es braucht Schreibzugriff auf Repositories und Organisationen.
+      organization:
+        name: Standard-Organisation
+        description: Organisation, die die Spiegel beim Aufbau single-org aufnimmt. Standard der App ist github-mirrors.
+      org_visibility:
+        name: Sichtbarkeit neuer Organisationen
+        description: Sichtbarkeit der Organisationen, die die App in Gitea anlegt.
+      mirror_interval:
+        name: Spiegel-Intervall
+        description: Wie oft Gitea die Spiegel abgleicht, zum Beispiel 30m, 8h oder 1d. Wer es setzt, schaltet damit auch das zeitgesteuerte Spiegeln ein.
+      lfs:
+        name: Git LFS
+        description: Git-LFS-Dateien mitspiegeln. In Gitea muss LFS aktiviert sein.
+      create_org:
+        name: Organisationen anlegen
+        description: Fehlende Organisationen in Gitea automatisch anlegen.
+      preserve_visibility:
+        name: Sichtbarkeit beibehalten
+        description: Private Quell-Repositories werden private Spiegel, öffentliche bleiben öffentlich.
+      template_owner:
+        name: Besitzer der Vorlage
+        description: Besitzer eines Gitea-Vorlagen-Repositories, das für neue Spiegel verwendet wird.
+      template_repo:
+        name: Vorlagen-Repository
+        description: Name des Gitea-Vorlagen-Repositories.
+      add_topics:
+        name: Themen übernehmen
+        description: Die Themen (Topics) des Quell-Repositories übernehmen.
+      topic_prefix:
+        name: Themen-Präfix
+        description: Text, der jedem übernommenen Thema vorangestellt wird, zum Beispiel gh-.
+      fork_strategy:
+        name: Forks
+        description: skip lässt Forks aus, reference spiegelt sie ohne den Verlauf des Elternprojekts, full-copy spiegelt alles.
+      ignore_certificate_errors:
+        name: Zertifikatsfehler ignorieren
+        description: Akzeptiert jedes Zertifikat des Ziels. Nur für ein Gitea im eigenen Netz, das kein vertrauenswürdiges Zertifikat bekommen kann.
+      push_concurrency:
+        name: Parallele Pushes
+        description: "Nur für GitHub- und GitLab-Ziele: wie viele Git-Abrufe oder -Pushes gleichzeitig laufen. Standard der App ist 2."
+  content:
+    name: Was gespiegelt wird
+    description: Releases, Wikis und Metadaten zusätzlich zum Code.
+    fields:
+      releases:
+        name: Releases
+        description: Releases samt Anhängen spiegeln.
+      release_limit:
+        name: Release-Limit
+        description: Anzahl der neuesten Releases pro Repository. Standard der App ist 10.
+      release_type:
+        name: Release-Art
+        description: all spiegelt alles, stable lässt aus, was die Quelle als Vorabversion markiert.
+      release_include_tags:
+        name: Release-Tags einschließen
+        description: "Nur Releases mit passendem Tag werden gespiegelt. Durch Komma getrennte Muster wie v1.* oder reguläre Ausdrücke in Schrägstrichen wie /^v\\d+\\.\\d+$/."
+      release_exclude_tags:
+        name: Release-Tags ausschließen
+        description: Releases mit passendem Tag werden übersprungen; gleiche Schreibweise wie oben. Ausschließen schlägt Einschließen.
+      release_asset_limit:
+        name: Anhänge-Limit
+        description: Anhänge nur für die neuesten N gespiegelten Releases hochladen. 0 bedeutet nur Release-Notizen. Leer bedeutet Anhänge für jedes gespiegelte Release.
+      wiki:
+        name: Wikis
+        description: Das Wiki jedes Repositories spiegeln.
+      metadata:
+        name: Metadaten
+        description: Hauptschalter für Issues, Pull Requests, Labels und Meilensteine.
+      issues:
+        name: Issues
+        description: Issues samt Kommentaren spiegeln. Braucht Metadaten.
+      pull_requests:
+        name: Pull Requests
+        description: Pull Requests als Issues spiegeln, Gitea kann sie nicht anlegen. Braucht Metadaten.
+      labels:
+        name: Labels
+        description: Labels spiegeln. Braucht Metadaten.
+      milestones:
+        name: Meilensteine
+        description: Meilensteine spiegeln. Braucht Metadaten.
+      issue_concurrency:
+        name: Issues parallel
+        description: Gleichzeitig verarbeitete Issues. Über 1 ist schneller, aber die Reihenfolge kann abweichen. Standard der App ist 3.
+      pull_request_concurrency:
+        name: Pull Requests parallel
+        description: Gleichzeitig verarbeitete Pull Requests. Über 1 kann die Reihenfolge ändern. Standard der App ist 5.
+  schedule:
+    name: Automatik
+    description: Zeitgesteuertes Spiegeln, Wiederholungen und Benachrichtigungen.
+    fields:
+      enabled:
+        name: Automatisch spiegeln
+        description: Beim Start alle Repositories importieren und spiegeln und danach im Intervall darunter weiter abgleichen.
+      interval:
+        name: Intervall
+        description: Sekunden (3600) oder ein Cron-Ausdruck wie 0 2 * * * für täglich um 2 Uhr. Standard der App ist 3600.
+      concurrent:
+        name: "Überlappende Läufe"
+        description: Spiegel-Vorgänge dürfen sich überlappen.
+      batch_size:
+        name: Stapelgröße
+        description: Parallel verarbeitete Repositories. Standard der App ist 10. Eine kleinere Zahl schont ein kleines Gerät.
+      pause_between_batches:
+        name: Pause zwischen Stapeln
+        description: Millisekunden. Standard der App ist 5000.
+      retry_attempts:
+        name: Wiederholversuche
+        description: Wie oft ein fehlgeschlagener Vorgang erneut versucht wird. Standard der App ist 3.
+      retry_delay:
+        name: Wartezeit zwischen Versuchen
+        description: Millisekunden zwischen den Versuchen. Standard der App ist 60000.
+      timeout:
+        name: Zeitlimit
+        description: Längste Dauer eines Spiegel-Vorgangs in Millisekunden. Standard der App ist 3600000.
+      auto_retry:
+        name: Automatisch wiederholen
+        description: Fehlgeschlagene Vorgänge von selbst erneut versuchen.
+      auto_import:
+        name: Neue Repositories importieren
+        description: Neue Repositories bei geplanten Läufen entdecken und importieren.
+      auto_mirror:
+        name: Neue Repositories spiegeln
+        description: "Neu importierte Repositories bei geplanten Läufen spiegeln, ohne \"Alle spiegeln\" zu drücken."
+      only_mirror_updated:
+        name: Nur geänderte Repositories
+        description: Nur Repositories mit Änderungen spiegeln.
+      update_interval:
+        name: Intervall der Änderungsprüfung
+        description: Wie oft nach Änderungen gesucht wird, in Millisekunden. Standard der App ist 86400000.
+      skip_recently_mirrored:
+        name: Frisch gespiegelte überspringen
+        description: Repositories überspringen, die vor kurzem gespiegelt wurden.
+      recent_threshold:
+        name: Frisch bedeutet
+        description: Millisekunden, die ein Spiegel als frisch gilt. Standard der App ist 3600000.
+      cleanup_before_mirror:
+        name: Vorher aufräumen
+        description: Vor jedem geplanten Spiegel-Lauf das Aufräumen ausführen.
+      notify_on_failure:
+        name: Bei Fehlern benachrichtigen
+        description: Eine Benachrichtigung senden, wenn ein Lauf fehlschlägt (Kanäle richtest du in der App ein).
+      notify_on_success:
+        name: Bei Erfolg benachrichtigen
+        description: Eine Benachrichtigung senden, wenn ein Lauf gelingt.
+      log_level:
+        name: Log-Stufe
+        description: Wie viel der Zeitplaner ins Protokoll schreibt.
+      timezone:
+        name: Zeitzone
+        description: Zeitzone für Cron-Zeitpläne, zum Beispiel Europe/Berlin. Standard der App ist UTC.
+  cleanup:
+    name: Aufräumen
+    description: Alte Ereignisse und Repositories, die an der Quelle nicht mehr existieren.
+    fields:
+      enabled:
+        name: Automatisch aufräumen
+        description: Alte Ereignisse aus der Datenbank der App entfernen.
+      retention_days:
+        name: Ereignisse behalten
+        description: Tage, die Ereignisse behalten werden. Standard der App ist 7.
+      delete_from_destination:
+        name: Auch Gitea ändern
+        description: Die Aktion für verwaiste Repositories auch in Gitea ausführen. Aus lässt die Kopien in Gitea unberührt und ändert nur die Liste der App.
+      delete_if_missing_at_source:
+        name: Fehlende Repositories behandeln
+        description: Repositories, die an der Quelle nicht mehr existieren, als verwaist behandeln. Das schaltet das Aufräumen ein.
+      orphaned_repo_action:
+        name: Aktion für verwaiste Repositories
+        description: skip tut nichts, archive behält die Daten schreibgeschützt (für Sicherungen empfohlen), delete entfernt sie.
+      dry_run:
+        name: Probelauf
+        description: Nur protokollieren, was das Aufräumen täte. Standard der App ist an.
+      protected_repos:
+        name: Geschützte Repositories
+        description: Repository-Namen, die das Aufräumen nie anfasst, durch Komma getrennt.
+      batch_size:
+        name: Stapelgröße
+        description: Pro Stapel bearbeitete Einträge. Standard der App ist 10.
+      pause_between_deletes:
+        name: Pause zwischen Löschungen
+        description: Millisekunden. Standard der App ist 2000.
+  backup:
+    name: Sicherung vor dem Abgleich
+    description: Behält eine Kopie eines Repositories, bevor ein Force-Push dessen Verlauf überschreibt.
+    fields:
+      strategy:
+        name: Strategie
+        description: disabled legt keine Kopien an, always sichert vor jedem Abgleich, on-force-push sichert nur, wenn der Verlauf umgeschrieben wurde, block-on-force-push sichert und wartet dann auf deine Freigabe. Standard der App ist on-force-push. Gilt, bis die App eine eigene Einstellung gespeichert hat; danach hat die Einstellung in der App Vorrang.
+      keep_count:
+        name: Kopien behalten
+        description: Neueste Kopien pro Repository. Standard der App ist 5. Gilt, bis die App eine eigene Einstellung gespeichert hat.
+      retention_days:
+        name: Tage behalten
+        description: "Ältere Kopien werden entfernt, die neueste bleibt immer. 0 behält sie für immer. Standard der App ist 30. Gilt, bis die App eine eigene Einstellung gespeichert hat."
+      git_username:
+        name: Git-Benutzername
+        description: Benutzername, der beim Abholen einer Kopie aus Gitea mit dem Zugriffstoken gesendet wird. Standard der App ist oauth2.
+  authentication:
+    name: Anmeldung
+    description: Wie man sich an der App anmeldet und welche Geheimnisse sie verwendet.
+    fields:
+      sign_in_with_home_assistant:
+        name: Mit Home Assistant anmelden
+        description: Home-Assistant-Administratoren werden automatisch angemeldet und bekommen ein Konto in der App. Ausschalten, um stattdessen mit E-Mail und Passwort anzumelden. Standardmäßig an.
+      default_method:
+        name: Anmeldeseite
+        description: Reiter, auf dem die Anmeldeseite öffnet, wenn E-Mail und Single Sign-on verfügbar sind.
+      allow_signup:
+        name: Registrierung erlauben
+        description: Die Registrierung per E-Mail nach dem ersten Konto offen lassen. Das erste Konto kann immer angelegt werden.
+      public_url:
+        name: "Öffentliche Adresse"
+        description: "Nur für Single Sign-on mit einem externen Anbieter: die Adresse, unter der man Home Assistant erreicht, zum Beispiel https://ha.example.com. Nur Schema und Host."
+      trusted_origins:
+        name: Vertrauenswürdige Ursprünge
+        description: Weitere Adressen, die Anmeldeanfragen senden dürfen, durch Komma getrennt, zum Beispiel Single-Sign-on-Anbieter. Nur Schema und Host.
+      log_level:
+        name: Log-Stufe der Anmeldung
+        description: debug zeigt bei der Fehlersuche den vollständigen Ablauf von Anmeldung und Single Sign-on. Standard der App ist warn.
+      session_secret:
+        name: Sitzungs-Geheimnis
+        description: Signiert die Sitzungen. Leer erzeugt beim ersten Start ein zufälliges und behält es in den Daten der App.
+      encryption_secret:
+        name: Verschlüsselungs-Geheimnis
+        description: Verschlüsselt die in der Datenbank gespeicherten Tokens. Leer erzeugt beim ersten Start ein zufälliges. Bei einer Wiederherstellung andernorts aufbewahren, ohne es sind die gespeicherten Tokens nicht lesbar.
+  advanced:
+    name: Erweitert
+    description: Feintuning für große Installationen und zur Fehlersuche. Die Standardwerte passen meistens.
+    fields:
+      repair_progress_interval:
+        name: Fortschritt der Reparatur
+        description: Die Reparatur bei jedem Start schreibt nach so vielen Repositories eine Zeile ins Protokoll. Standard der App ist 100.
+      repair_request_timeout_ms:
+        name: Zeitlimit der Reparatur
+        description: Millisekunden, die die Reparatur auf eine Antwort von Gitea wartet. Erhöhen, wenn Gitea langsam ist. Standard der App ist 15000.
+      mcp_internal_url:
+        name: Interne Adresse des MCP-Endpunkts
+        description: Adresse, über die die MCP-Werkzeuge der App die App selbst aufrufen. Der Standard funktioniert in dieser App.

@@ -1,0 +1,333 @@
+configuration:
+  source:
+    name: Source
+    description: Where the repositories to mirror come from.
+    fields:
+      provider:
+        name: Source host
+        description: The service the repositories come from. GitHub is the supported path; GitLab and Gitea/Forgejo (including Codeberg) are beta. It cannot be changed once repositories were imported.
+      url:
+        name: Source address
+        description: Address of the GitLab or Gitea/Forgejo instance, for example https://gitlab.example.com. Ignored for GitHub. Defaults to https://gitlab.com or https://codeberg.org.
+      username:
+        name: Username
+        description: Your account name at the source host.
+      token:
+        name: Access token
+        description: Personal access token of the source account. GitHub needs the scopes repo and admin:org, GitLab read_api and read_repository, Gitea/Forgejo read:repository, read:user and read:organization.
+      account_type:
+        name: Account type
+        description: Whether the source account is a personal account or an organization.
+      github_api_url:
+        name: GitHub API address
+        description: "Only for GitHub Enterprise: https://ghe.example.com/api/v3 (Server) or https://api.TENANT.ghe.com (Cloud with data residency). Leave empty for github.com."
+      include_private:
+        name: Private repositories
+        description: Include private repositories.
+      include_public:
+        name: Public repositories
+        description: Include public repositories.
+      include_archived:
+        name: Archived repositories
+        description: Include archived repositories.
+      include_collaborator_repos:
+        name: Repositories you collaborate on
+        description: Include repositories that belong to others and where you are a collaborator. Switch off to import only your own.
+      skip_forks:
+        name: Skip forks
+        description: Leave forked repositories out.
+      mirror_starred:
+        name: Mirror starred repositories
+        description: Also import the repositories you starred.
+      starred_lists:
+        name: Star lists
+        description: "Only with starred repositories: names of GitHub star lists to mirror, separated by commas. Empty means every starred repository."
+      starred_org:
+        name: Organization for starred repositories
+        description: Gitea organization that receives the starred repositories. The app default is starred.
+      starred_mode:
+        name: Starred repositories layout
+        description: dedicated-org puts them all into one organization, preserve-owner keeps the original owner as organization.
+      starred_duplicate_strategy:
+        name: Name clashes of starred repositories
+        description: "What happens when two starred repositories share a name: suffix gives repo-owner, prefix gives owner-repo, owner-org uses the owner as organization."
+      skip_starred_issues:
+        name: Lightweight starred repositories
+        description: Skip issues of starred repositories to save time and requests.
+      auto_mirror_starred:
+        name: Mirror starred repositories automatically
+        description: Mirror starred repositories during scheduled runs and Mirror All. Off means they are imported for browsing and mirrored one by one.
+      mirror_organizations:
+        name: Mirror organizations
+        description: Also mirror the repositories of your organizations.
+      only_mirror_orgs:
+        name: Organizations only
+        description: Skip your personal repositories and mirror organization repositories only.
+      include_organizations:
+        name: Organization allowlist
+        description: Only mirror these organizations, separated by commas. Empty means all organizations you belong to.
+      excluded_organizations:
+        name: Excluded organizations
+        description: Organizations to leave out, separated by commas.
+      preserve_org_structure:
+        name: Keep the organization structure
+        description: Create the same organizations in Gitea. Superseded by the layout below when that is set.
+      mirror_strategy:
+        name: Layout in Gitea
+        description: preserve keeps the source organizations, single-org puts everything into one organization, flat-user puts everything under the Gitea user, mixed keeps personal repositories in one organization and organization repositories in theirs.
+  destination:
+    name: Destination
+    description: Where the mirrors are created. The default is the Gitea app by alexbelgium.
+    fields:
+      provider:
+        name: Destination host
+        description: Where mirrors are created. Gitea and Forgejo pull the code themselves; GitHub and GitLab receive pushes from this app and are beta.
+      url:
+        name: Destination address
+        description: Address of your Gitea. The default is the Gitea app by alexbelgium. For another app use http://<host name>:3000, for a Gitea elsewhere for example https://git.example.com. An address set here is applied at every start; clear it to manage the address in the app.
+      external_url:
+        name: Address for links
+        description: Address your browser uses to reach Gitea, for dashboard links. Empty takes the address Gitea itself announces (its ROOT_URL).
+      username:
+        name: Username
+        description: Gitea account that owns the mirrors. Empty looks it up from the access token.
+      token:
+        name: Access token
+        description: Access token of that account (Gitea > Settings > Applications). It needs write access to repositories and organizations.
+      organization:
+        name: Default organization
+        description: Organization that receives the mirrors with the single-org layout. The app default is github-mirrors.
+      org_visibility:
+        name: Visibility of new organizations
+        description: Visibility of organizations the app creates in Gitea.
+      mirror_interval:
+        name: Mirror interval
+        description: How often Gitea pulls the mirrors, for example 30m, 8h or 1d. Setting it also switches scheduled mirroring on.
+      lfs:
+        name: Git LFS
+        description: Mirror Git LFS files. Gitea needs LFS enabled.
+      create_org:
+        name: Create organizations
+        description: Create missing organizations in Gitea automatically.
+      preserve_visibility:
+        name: Keep visibility
+        description: Private source repositories become private mirrors, public ones stay public.
+      template_owner:
+        name: Template owner
+        description: Owner of a Gitea template repository used for new mirrors.
+      template_repo:
+        name: Template repository
+        description: Name of the Gitea template repository.
+      add_topics:
+        name: Add topics
+        description: Copy the topics of the source repository.
+      topic_prefix:
+        name: Topic prefix
+        description: Text put in front of every copied topic, for example gh-.
+      fork_strategy:
+        name: Forks
+        description: "skip leaves forks out, reference mirrors them without their parent's history, full-copy mirrors everything."
+      ignore_certificate_errors:
+        name: Ignore certificate errors
+        description: Accepts any certificate of the destination. Only for a Gitea in your own network that cannot get a trusted certificate.
+      push_concurrency:
+        name: Parallel pushes
+        description: "Only for GitHub and GitLab destinations: how many git fetch or push operations run at once. The app default is 2."
+  content:
+    name: What to mirror
+    description: Releases, wikis and metadata on top of the code.
+    fields:
+      releases:
+        name: Releases
+        description: Mirror releases together with their assets.
+      release_limit:
+        name: Release limit
+        description: Newest releases to mirror per repository. The app default is 10.
+      release_type:
+        name: Release type
+        description: all mirrors everything, stable skips what the source marks as a pre-release.
+      release_include_tags:
+        name: Release tags to include
+        description: "Only releases whose tag matches are mirrored. Comma separated globs such as v1.* or regular expressions in slashes such as /^v\\d+\\.\\d+$/."
+      release_exclude_tags:
+        name: Release tags to exclude
+        description: Releases whose tag matches are skipped; same notation as above. Excluding wins over including.
+      release_asset_limit:
+        name: Release asset limit
+        description: Upload assets only for the newest N mirrored releases. 0 means release notes only. Empty means assets for every mirrored release.
+      wiki:
+        name: Wikis
+        description: Mirror the wiki of each repository.
+      metadata:
+        name: Metadata
+        description: Main switch for issues, pull requests, labels and milestones.
+      issues:
+        name: Issues
+        description: Mirror issues with their comments. Needs metadata.
+      pull_requests:
+        name: Pull requests
+        description: Mirror pull requests as issues, Gitea cannot create them. Needs metadata.
+      labels:
+        name: Labels
+        description: Mirror labels. Needs metadata.
+      milestones:
+        name: Milestones
+        description: Mirror milestones. Needs metadata.
+      issue_concurrency:
+        name: Issues in parallel
+        description: Issues processed at once. Above 1 is faster, but they may be created out of order. The app default is 3.
+      pull_request_concurrency:
+        name: Pull requests in parallel
+        description: Pull requests processed at once. Above 1 may change their order. The app default is 5.
+  schedule:
+    name: Automation
+    description: Scheduled mirroring, retries and notifications.
+    fields:
+      enabled:
+        name: Automatic mirroring
+        description: Import and mirror all repositories at start and keep syncing on the interval below.
+      interval:
+        name: Interval
+        description: "Seconds (3600) or a cron expression such as 0 2 * * * for every day at 2 o'clock. The app default is 3600."
+      concurrent:
+        name: Concurrent runs
+        description: Allow mirror operations to overlap.
+      batch_size:
+        name: Batch size
+        description: Repositories processed in parallel. The app default is 10. A smaller number is gentler on a small device.
+      pause_between_batches:
+        name: Pause between batches
+        description: Milliseconds. The app default is 5000.
+      retry_attempts:
+        name: Retry attempts
+        description: How often a failed operation is tried again. The app default is 3.
+      retry_delay:
+        name: Retry delay
+        description: Milliseconds between attempts. The app default is 60000.
+      timeout:
+        name: Timeout
+        description: Longest time for one mirror operation in milliseconds. The app default is 3600000.
+      auto_retry:
+        name: Retry automatically
+        description: Try failed operations again by themselves.
+      auto_import:
+        name: Import new repositories
+        description: Discover and import new repositories during scheduled runs.
+      auto_mirror:
+        name: Mirror new repositories
+        description: Mirror newly imported repositories during scheduled runs without pressing Mirror All.
+      only_mirror_updated:
+        name: Only changed repositories
+        description: Mirror only repositories that have updates.
+      update_interval:
+        name: Update check interval
+        description: How often to look for updates, in milliseconds. The app default is 86400000.
+      skip_recently_mirrored:
+        name: Skip recent mirrors
+        description: Skip repositories that were mirrored a short time ago.
+      recent_threshold:
+        name: Recent means
+        description: Milliseconds a mirror counts as recent. The app default is 3600000.
+      cleanup_before_mirror:
+        name: Clean up first
+        description: Run the cleanup before each scheduled mirror run.
+      notify_on_failure:
+        name: Notify on failure
+        description: Send a notification when a run fails (set up the channels in the app).
+      notify_on_success:
+        name: Notify on success
+        description: Send a notification when a run succeeds.
+      log_level:
+        name: Log level
+        description: How much the scheduler writes to the log.
+      timezone:
+        name: Time zone
+        description: Time zone for cron schedules, for example Europe/Berlin. The app default is UTC.
+  cleanup:
+    name: Cleanup
+    description: Old events and repositories that no longer exist at the source.
+    fields:
+      enabled:
+        name: Automatic cleanup
+        description: "Remove old events from the app's database."
+      retention_days:
+        name: Keep events for
+        description: Days to keep events. The app default is 7.
+      delete_from_destination:
+        name: Also change Gitea
+        description: "Apply the action for orphaned repositories in Gitea too. Off leaves the copies in Gitea untouched and only changes the app's own list."
+      delete_if_missing_at_source:
+        name: Handle repositories missing at the source
+        description: Treat repositories that no longer exist at the source as orphaned. This switches the cleanup on.
+      orphaned_repo_action:
+        name: Action for orphaned repositories
+        description: skip does nothing, archive keeps the data read-only (recommended for backups), delete removes it.
+      dry_run:
+        name: Dry run
+        description: Only log what the cleanup would do. The app default is on.
+      protected_repos:
+        name: Protected repositories
+        description: Repository names the cleanup never touches, separated by commas.
+      batch_size:
+        name: Batch size
+        description: Items handled per batch. The app default is 10.
+      pause_between_deletes:
+        name: Pause between deletions
+        description: Milliseconds. The app default is 2000.
+  backup:
+    name: Backup before sync
+    description: Keeps a copy of a repository before a force push overwrites its history.
+    fields:
+      strategy:
+        name: Strategy
+        description: disabled keeps no copies, always saves before every sync, on-force-push saves only when history was rewritten, block-on-force-push saves and then waits for your approval. The app default is on-force-push. Applies until the app has stored a setting of its own; after that the Backup settings page in the app wins.
+      keep_count:
+        name: Copies to keep
+        description: Newest copies kept per repository. The app default is 5. Applies until the app has stored a setting of its own.
+      retention_days:
+        name: Days to keep
+        description: Copies older than this are removed, the newest one always stays. 0 keeps them for ever. The app default is 30. Applies until the app has stored a setting of its own.
+      git_username:
+        name: Git user name
+        description: User name sent with the access token when a copy is fetched from Gitea. The app default is oauth2.
+  authentication:
+    name: Sign-in
+    description: How people sign in to the app and which secrets it uses.
+    fields:
+      sign_in_with_home_assistant:
+        name: Sign in with Home Assistant
+        description: Home Assistant administrators are signed in automatically and get an account in the app. Switch it off to sign in with e-mail and password instead. On by default.
+      default_method:
+        name: Login page
+        description: Tab the login page opens on when both e-mail and single sign-on are available.
+      allow_signup:
+        name: Allow sign-up
+        description: Keep e-mail sign-up open after the first account exists. The first account can always be created.
+      public_url:
+        name: Public address
+        description: "Only for single sign-on with an external provider: the address people use to reach Home Assistant, for example https://ha.example.com. Scheme and host only."
+      trusted_origins:
+        name: Trusted origins
+        description: More addresses allowed to send sign-in requests, separated by commas, for example single sign-on providers. Scheme and host only.
+      log_level:
+        name: Sign-in log level
+        description: Set debug to see the full sign-in and single sign-on trace when troubleshooting. The app default is warn.
+      session_secret:
+        name: Session secret
+        description: "Signs the sessions. Empty creates a random one at the first start and keeps it in the app's data."
+      encryption_secret:
+        name: Encryption secret
+        description: Encrypts the tokens stored in the database. Empty creates a random one at the first start. Keep it when you restore a backup elsewhere, without it the stored tokens cannot be read.
+  advanced:
+    name: Advanced
+    description: Tuning for large installations and troubleshooting. The defaults fit most setups.
+    fields:
+      repair_progress_interval:
+        name: Repair progress
+        description: The repair at every start logs a line after this many repositories. The app default is 100.
+      repair_request_timeout_ms:
+        name: Repair request timeout
+        description: Milliseconds the repair waits for one Gitea answer. Raise it when Gitea is slow. The app default is 15000.
+      mcp_internal_url:
+        name: Internal address for the MCP endpoint
+        description: "Address the app's MCP tools use to call the app itself. The default works inside this app."

@@ -1,42 +1,85 @@
-# Example App
+<!-- header:begin (generated from project metadata) -->
+<h1 align="center">Gitea Mirror</h1>
 
-<!-- badges:begin (generated from project metadata) -->
-[![version](https://img.shields.io/static/v1?label=version&message=0.1.0&color=1877A5&style=flat)](https://github.com/seb5594/Home-Assistant-App-Template/releases) [![released](https://img.shields.io/github/release-date-pre/seb5594/Home-Assistant-App-Template?label=released&style=flat)](https://github.com/seb5594/Home-Assistant-App-Template/releases) [![build](https://img.shields.io/github/actions/workflow/status/seb5594/Home-Assistant-App-Template/ci.yml?branch=main&label=build&style=flat)](https://github.com/seb5594/Home-Assistant-App-Template/actions/workflows/ci.yml)<br>
-[![stars](https://img.shields.io/github/stars/seb5594/Home-Assistant-App-Template?label=stars&style=flat)](https://github.com/seb5594/Home-Assistant-App-Template/stargazers) [![issues](https://img.shields.io/github/issues/seb5594/Home-Assistant-App-Template?label=issues&style=flat)](https://github.com/seb5594/Home-Assistant-App-Template/issues) [![updated](https://img.shields.io/github/last-commit/seb5594/Home-Assistant-App-Template?label=updated&style=flat)](https://github.com/seb5594/Home-Assistant-App-Template/commits/main) ![image pulls](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fseb5594%2FHome-Assistant-App-Template%2Fbadges%2Fimage-pulls.json&style=flat)<br>
-![arch](https://img.shields.io/static/v1?label=arch&message=amd64%20%C2%B7%20aarch64%20%C2%B7%20armv7%20%C2%B7%20armhf%20%C2%B7%20i386&color=157F71&style=flat)<br>
-![mounts (read-only)](https://img.shields.io/static/v1?label=mounts%20%28read-only%29&message=config&color=157F71&style=flat)<br>
-![stage](https://img.shields.io/static/v1?label=stage&message=stable&color=2F855A&style=flat) ![options](https://img.shields.io/static/v1?label=options&message=1&color=1877A5&style=flat)<br>
-![image size](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fseb5594%2FHome-Assistant-App-Template%2Fbadges%2Fimage-size.json&style=flat) ![runtime tests](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fseb5594%2FHome-Assistant-App-Template%2Fbadges%2Fruntime-tests.json&style=flat) ![last build](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fseb5594%2FHome-Assistant-App-Template%2Fbadges%2Flast-build.json&style=flat)<br>
-[![Home Assistant](https://img.shields.io/static/v1?label=Home%20Assistant&message=Add%20app%20repository&color=18BCF2&style=flat&logo=homeassistant&logoColor=white)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fseb5594%2FHome-Assistant-Apps)
-<!-- badges:end -->
+<p align="center">
+  <img src="https://raw.githubusercontent.com/seb5594/Home-Assistant-Gitea-Mirror-App/main/gitea_mirror/logo.png" alt="Gitea Mirror" width="201" height="160">
+</p>
 
-A starting point for a Home Assistant app with the shared pipeline already wired in: validation,
-multi-architecture build, runtime tests, GHCR release and README badges.
+---
 
-## Using this template
+<p align="center">
+  <a href="https://paypal.me/seb5594"><img src="https://img.shields.io/static/v1?label=Support&amp;message=PayPal&amp;color=0070BA&amp;logo=paypal&amp;logoColor=white&amp;style=for-the-badge" alt="PayPal" height="40"></a>
+  <a href="https://buymeacoffee.com/seb5594"><img src="https://img.shields.io/static/v1?label=Support&amp;message=Buy%20Me%20a%20Coffee&amp;color=FFDD00&amp;logo=buy-me-a-coffee&amp;logoColor=black&amp;style=for-the-badge" alt="Buy Me a Coffee" height="40"></a><br>
+  <a href="https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fseb5594%2FHome-Assistant-Apps"><img src="https://img.shields.io/static/v1?label=Home%20Assistant&amp;message=Add%20app%20repository&amp;color=18BCF2&amp;logo=homeassistant&amp;logoColor=white&amp;style=for-the-badge" alt="Home Assistant" height="28"></a>
+  <a href="https://github.com/seb5594/Home-Assistant-Gitea-Mirror-App/releases"><img src="https://img.shields.io/static/v1?label=version&amp;message=Alpha%201&amp;color=1877A5&amp;style=for-the-badge" alt="version" height="28"></a><br>
+  <img src="https://img.shields.io/static/v1?label=arch&amp;message=amd64%20%C2%B7%20aarch64&amp;color=157F71&amp;style=flat" alt="arch" height="20">
+  <img src="https://img.shields.io/static/v1?label=stage&amp;message=experimental&amp;color=2F855A&amp;style=flat" alt="stage" height="20">
+  <img src="https://img.shields.io/static/v1?label=ingress&amp;message=enabled&amp;color=7C3AED&amp;style=flat" alt="ingress" height="20"><br>
+  <a href="https://github.com/seb5594/Home-Assistant-Apps/stargazers"><img src="https://img.shields.io/github/stars/seb5594/Home-Assistant-Gitea-Mirror-App?label=stars&amp;style=flat" alt="stars" height="20"></a>
+  <a href="https://github.com/seb5594/Home-Assistant-Apps/issues"><img src="https://img.shields.io/github/issues/seb5594/Home-Assistant-Gitea-Mirror-App?label=issues&amp;style=flat" alt="issues" height="20"></a>
+  <a href="https://github.com/seb5594/Home-Assistant-Gitea-Mirror-App/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/seb5594/Home-Assistant-Gitea-Mirror-App/ci.yml?branch=main&amp;label=checks&amp;style=flat" alt="checks" height="20"></a>
+  <a href="https://github.com/seb5594/Home-Assistant-Apps#license"><img src="https://img.shields.io/github/license/seb5594/Home-Assistant-Gitea-Mirror-App?label=license&amp;style=flat" alt="license" height="20"></a>
+</p>
+<!-- header:end -->
 
-1. Create a repository from this template. Name it `Home-Assistant-<project>-App` so the
-   [app catalog](https://github.com/seb5594/Home-Assistant-Apps) picks it up.
-2. Rename `example-app/` and set `slug`, `name`, `url`, `description` and the options in `config.yaml`.
-   The folder name must equal the slug.
-3. Replace the repository URL in the `Dockerfile` label and change the greeting logic in `run.sh`.
-   Every `apk` package is pinned through a build argument with a legacy twin (`ARG JQ_VERSION=` and
-   `ARG JQ_VERSION_LEGACY=`): the twin carries the Alpine 3.22 version used for `armv7`, `armhf` and `i386`.
-   Remove those architectures from `config.yaml` to drop the twins.
-4. Adjust `.github/tests/runtime.sh`; it runs inside the built image.
-5. Regenerate the badge block above and commit the result:
+Brings [Gitea Mirror](https://github.com/RayLabsHQ/gitea-mirror) to Home Assistant. It mirrors
+repositories from GitHub, GitLab or another Gitea to your own Gitea and keeps them up to date. The
+original web interface is the page of the app, so there is nothing to open on your network.
 
-   ```bash
-   git clone https://github.com/seb5594/hass-workflows .engine   # private; needs access
-   python .engine/.scripts/readme.py
-   ```
+> **Pre-release.** The versions are Alpha pre-releases: tested against a real Gitea, not yet on many
+> installations. Please report what you see.
 
-6. Raise `version` in `config.yaml` and the `BUILD_VERSION` default in the `Dockerfile` together
-   with a new `CHANGELOG.md` entry for every release.
+* **Inside Home Assistant.** The web interface opens through ingress and signs you in with your
+  Home Assistant account.
+* **Made for the Gitea app.** The address of the [Gitea app by alexbelgium](https://github.com/alexbelgium/hassio-addons/tree/master/gitea)
+  is already filled in. At every start the log checks Gitea and your token, and takes the Gitea user
+  name and the address of your browser from it.
+* **Every variable is an option.** All environment variables of Gitea Mirror can be set on the
+  configuration page, in English and German. What you leave empty stays in the hands of the web
+  interface.
+* **Pinned and followed.** The release of Gitea Mirror is pinned, never `latest`. A scheduled
+  workflow follows the releases of the original project and turns each into a new version of this app.
 
-The only workflow, `.github/workflows/ci.yml`, calls the shared engine at a pinned commit and
-needs the `ORCHESTRATION_PAT` secret. Pin base images and every `apk` package to an exact
-version; the pipeline rejects anything floating.
+## Install
+
+In Home Assistant open **Settings → Apps → App store → ⋮ → Repositories**, add
+`https://github.com/seb5594/Home-Assistant-Gitea-Mirror-App` and install **Gitea Mirror**.
+Older versions call these *Add-ons* and *Add-on store*. Setup, options and troubleshooting are in the
+[documentation](gitea_mirror/DOCS.md).
+
+## How it fits together
+
+```text
+Home Assistant ──ingress──► ingress-server ──► Gitea Mirror (Bun, SQLite in /data)
+ (your account)                 │                  │
+                                │                  ├──► source: GitHub, GitLab, Gitea
+                                └ user headers     └──► destination: your Gitea
+```
+
+The app takes the official release unchanged. The start script turns the options into the
+environment of Gitea Mirror, checks Gitea, creates the secrets and starts it; a small server in
+front removes the ingress path and lets only Home Assistant through.
+
+## Development
+
+```text
+gitea_mirror/
+  config.yaml, translations/    options and their labels
+  rootfs/usr/lib/gitea-mirror/  shell libraries: options to environment, Gitea check
+  rootfs/usr/share/gitea-mirror/
+    env-map.json                which option sets which variable
+    ingress-server.ts           the server in front of the application
+  rootfs/etc/s6-overlay/        the service
+.github/tests/runtime.sh        runs inside the built image
+.github/workflows/upstream.yml  follows the releases of Gitea Mirror
+```
+
+The runtime test starts the real application behind a fake ingress path, signs in with the headers
+Home Assistant adds and gives it its configuration. It also checks that every variable in
+`env-map.json` is still read by the release in the image, so an upstream rename fails the build and
+not an installation. A new release of Gitea Mirror is picked up by `.github/scripts/upstream.py`:
+it changes the pin in the `Dockerfile`, raises the app version and adds a changelog entry. Renovate
+pull requests for the base image and the Alpine packages get their version bump the same way.
 
 <!-- support:begin (generated, shared text) -->
 ## Say thanks
@@ -45,5 +88,13 @@ All my projects are built in my spare time, just for the fun of it. Still, they 
 
 If my work helped you or turned out to be useful, show your appreciation with a hot drink for my next sleepless night.
 
-[![Buy Me a Coffee](https://img.shields.io/static/v1?label=Support&message=Buy%20Me%20a%20Coffee&color=FFDD00&logo=buy-me-a-coffee&logoColor=black&style=for-the-badge)](https://buymeacoffee.com/seb5594) [![PayPal](https://img.shields.io/static/v1?label=Support&message=PayPal&color=0070BA&logo=paypal&logoColor=white&style=for-the-badge)](https://www.paypal.com/donate/?hosted_button_id=QMQPNRENXDN26)
+[![PayPal](https://img.shields.io/static/v1?label=Support&message=PayPal&color=0070BA&logo=paypal&logoColor=white&style=for-the-badge)](https://paypal.me/seb5594) [![Buy Me a Coffee](https://img.shields.io/static/v1?label=Support&message=Buy%20Me%20a%20Coffee&color=FFDD00&logo=buy-me-a-coffee&logoColor=black&style=for-the-badge)](https://buymeacoffee.com/seb5594)
 <!-- support:end -->
+
+<!-- license:begin (generated from the license file) -->
+## License
+
+[![license](https://img.shields.io/static/v1?label=license&message=MIT&color=5B6770&style=flat)](LICENSE)
+
+Published under the [MIT License](LICENSE).
+<!-- license:end -->

@@ -1,0 +1,136 @@
+name: Gitea Mirror
+description: Mirrors your GitHub, GitLab or Gitea repositories to your own Gitea and keeps them up to date, with the original web interface inside Home Assistant.
+version: "1.0.0-alpha.1"
+slug: gitea_mirror
+stage: experimental
+init: false
+arch:
+  - amd64
+  - aarch64
+url: https://github.com/seb5594/Home-Assistant-Gitea-Mirror-App
+ingress: true
+ingress_port: 8099
+panel_icon: mdi:mirror-variant
+panel_title: Gitea Mirror
+backup_exclude:
+  - mirrors/**
+options:
+  source: {}
+  destination:
+    url: "http://db21ed7f-gitea:3000"
+  content: {}
+  schedule: {}
+  cleanup: {}
+  backup: {}
+  authentication:
+    sign_in_with_home_assistant: true
+  advanced: {}
+schema:
+  source:
+    provider: list(github|gitlab|gitea)?
+    url: url?
+    username: str?
+    token: password?
+    account_type: list(personal|organization)?
+    github_api_url: url?
+    include_private: bool?
+    include_public: bool?
+    include_archived: bool?
+    include_collaborator_repos: bool?
+    skip_forks: bool?
+    mirror_starred: bool?
+    starred_lists: str?
+    starred_org: str?
+    starred_mode: list(dedicated-org|preserve-owner)?
+    starred_duplicate_strategy: list(suffix|prefix|owner-org)?
+    skip_starred_issues: bool?
+    auto_mirror_starred: bool?
+    mirror_organizations: bool?
+    only_mirror_orgs: bool?
+    include_organizations: str?
+    excluded_organizations: str?
+    preserve_org_structure: bool?
+    mirror_strategy: list(preserve|single-org|flat-user|mixed)?
+  destination:
+    provider: list(gitea|forgejo|github|gitlab)?
+    url: url?
+    external_url: url?
+    username: str?
+    token: password?
+    organization: str?
+    org_visibility: list(public|private|limited|default)?
+    mirror_interval: str?
+    lfs: bool?
+    create_org: bool?
+    preserve_visibility: bool?
+    template_owner: str?
+    template_repo: str?
+    add_topics: bool?
+    topic_prefix: str?
+    fork_strategy: list(skip|reference|full-copy)?
+    ignore_certificate_errors: bool?
+    push_concurrency: int(1,32)?
+  content:
+    releases: bool?
+    release_limit: int(1,100)?
+    release_type: list(all|stable)?
+    release_include_tags: str?
+    release_exclude_tags: str?
+    release_asset_limit: int(0,)?
+    wiki: bool?
+    metadata: bool?
+    issues: bool?
+    pull_requests: bool?
+    labels: bool?
+    milestones: bool?
+    issue_concurrency: int(1,)?
+    pull_request_concurrency: int(1,)?
+  schedule:
+    enabled: bool?
+    interval: str?
+    concurrent: bool?
+    batch_size: int(1,)?
+    pause_between_batches: int(0,)?
+    retry_attempts: int(0,)?
+    retry_delay: int(0,)?
+    timeout: int(0,)?
+    auto_retry: bool?
+    auto_import: bool?
+    auto_mirror: bool?
+    only_mirror_updated: bool?
+    update_interval: int(0,)?
+    skip_recently_mirrored: bool?
+    recent_threshold: int(0,)?
+    cleanup_before_mirror: bool?
+    notify_on_failure: bool?
+    notify_on_success: bool?
+    log_level: list(error|warn|info|debug)?
+    timezone: str?
+  cleanup:
+    enabled: bool?
+    retention_days: int(1,)?
+    delete_from_destination: bool?
+    delete_if_missing_at_source: bool?
+    orphaned_repo_action: list(skip|archive|delete)?
+    dry_run: bool?
+    protected_repos: str?
+    batch_size: int(1,)?
+    pause_between_deletes: int(0,)?
+  backup:
+    strategy: list(disabled|always|on-force-push|block-on-force-push)?
+    keep_count: int(1,)?
+    retention_days: int(0,)?
+    git_username: str?
+  authentication:
+    sign_in_with_home_assistant: bool?
+    default_method: list(email|sso)?
+    allow_signup: bool?
+    public_url: url?
+    trusted_origins: str?
+    log_level: list(debug|info|warn|error)?
+    session_secret: password?
+    encryption_secret: password?
+  advanced:
+    repair_progress_interval: int(1,)?
+    repair_request_timeout_ms: int(1000,)?
+    mcp_internal_url: url?

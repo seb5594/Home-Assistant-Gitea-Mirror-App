@@ -1,0 +1,61 @@
+name: Follow upstream releases
+
+# A new release of the packaged software becomes a new version of the app by itself:
+# the script changes the pin in the Dockerfile and raises the app version (see upstream.py),
+# and the commit starts the release pipeline.
+
+on:
+  schedule:
+    - cron: '41 4 * * *'
+  workflow_dispatch:
+  pull_request:
+    branches: [dev, main]
+
+permissions:
+  contents: write
+
+jobs:
+  follow:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # A push made with the default token would not start the release pipeline.
+          token: ${{ secrets.ORCHESTRATION_PAT }}
+      - id: upstream
+        run: python3 .github/scripts/upstream.py update
+      - name: Commit the new version
+        if: steps.upstream.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Update upstream to release ${{ steps.upstream.outputs.version }}"
+          git push
+
+  renovate:
+    # Renovate raises base image and package pins; each such pull request also needs a new app version.
+    if: github.event_name == 'pull_request' && github.actor == 'renovate[bot]' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          token: ${{ secrets.ORCHESTRATION_PAT }}
+      - id: bump
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          python3 .github/scripts/upstream.py bump "Dependencies: ${TITLE#chore(deps): }." --base "origin/${{ github.base_ref }}"
+      - name: Commit the new version
+        if: steps.bump.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Raise the app version to ${{ steps.bump.outputs.version }}"
+          git push
