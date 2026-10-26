@@ -1,8 +1,8 @@
 name: Follow upstream releases
 
 # A new release of the packaged software becomes a new version of the app by itself:
-# the script changes the pin in the Dockerfile and raises the app version (see upstream.py),
-# and the commit starts the release pipeline.
+# the engine script changes the pin in the Dockerfile and raises the app version
+# (see .scripts/upstream.py in the engine), and the commit starts the release pipeline.
 
 on:
   schedule:
@@ -24,8 +24,15 @@ jobs:
         with:
           # A push made with the default token would not start the release pipeline.
           token: ${{ secrets.ORCHESTRATION_PAT }}
+      - uses: actions/checkout@v7
+        with:
+          repository: seb5594/hass-workflows
+          ref: 49dd6a6e6dfa7d14e3ce1c031b4df9a58c12a66c
+          token: ${{ secrets.ORCHESTRATION_PAT }}
+          path: .engine
+          persist-credentials: false
       - id: upstream
-        run: python3 .github/scripts/upstream.py update
+        run: python3 .engine/.scripts/upstream.py update
       - name: Commit the new version
         if: steps.upstream.outputs.changed == 'true'
         run: |
@@ -46,11 +53,18 @@ jobs:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
           token: ${{ secrets.ORCHESTRATION_PAT }}
+      - uses: actions/checkout@v7
+        with:
+          repository: seb5594/hass-workflows
+          ref: 49dd6a6e6dfa7d14e3ce1c031b4df9a58c12a66c
+          token: ${{ secrets.ORCHESTRATION_PAT }}
+          path: .engine
+          persist-credentials: false
       - id: bump
         env:
           TITLE: ${{ github.event.pull_request.title }}
         run: |
-          python3 .github/scripts/upstream.py bump "Dependencies: ${TITLE#chore(deps): }." --base "origin/${{ github.base_ref }}"
+          python3 .engine/.scripts/upstream.py bump "Dependencies: ${TITLE#chore(deps): }." --base "origin/${{ github.base_ref }}"
       - name: Commit the new version
         if: steps.bump.outputs.changed == 'true'
         run: |
