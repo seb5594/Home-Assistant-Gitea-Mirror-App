@@ -7,7 +7,7 @@ ARG BUILD_FROM=ghcr.io/home-assistant/base:3.24-2026.10.1
 ARG GITEA_MIRROR_VERSION=v3.46.0
 # The runtime in its Alpine (musl) build; upstream runs on the same bun release.
 # renovate: datasource=docker depName=docker.io/oven/bun
-ARG BUN_VERSION=1.3.14-alpine
+ARG BUN_VERSION=1.4.4-alpine
 
 FROM ghcr.io/raylabshq/gitea-mirror:${GITEA_MIRROR_VERSION} AS gitea-mirror
 FROM docker.io/oven/bun:${BUN_VERSION} AS bun
