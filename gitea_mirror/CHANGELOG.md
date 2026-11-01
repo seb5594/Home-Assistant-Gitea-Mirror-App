@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0-alpha.2
+
+* Update the base image and packaged dependencies to available release versions; restore reproducible CI builds.
+
 ## 1.0.0-alpha.1
 
 * First version: Gitea Mirror 3.46.0 in Home Assistant, with the web interface behind ingress.
