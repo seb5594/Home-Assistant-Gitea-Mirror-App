@@ -1,4 +1,4 @@
-ARG BUILD_FROM=ghcr.io/home-assistant/base:3.24-2026.10.1
+ARG BUILD_FROM=ghcr.io/home-assistant/base:3.24-2026.10.3
 
 # The official image holds the application: the compiled web interface, its dependencies and the
 # database migrations. Only those files are taken from it. The Debian system underneath is not,
