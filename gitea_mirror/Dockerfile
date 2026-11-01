@@ -4,7 +4,7 @@ ARG BUILD_FROM=ghcr.io/home-assistant/base:3.24-2026.10.1
 # database migrations. Only those files are taken from it. The Debian system underneath is not,
 # because the app is meant to run on the Home Assistant base image with bashio and s6-overlay.
 # renovate: datasource=docker depName=ghcr.io/raylabshq/gitea-mirror
-ARG GITEA_MIRROR_VERSION=v3.46.0
+ARG GITEA_MIRROR_VERSION=v3.51.0
 # The runtime in its Alpine (musl) build; upstream runs on the same bun release.
 # renovate: datasource=docker depName=docker.io/oven/bun
 ARG BUN_VERSION=1.3.14-alpine
