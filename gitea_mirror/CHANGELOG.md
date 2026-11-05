@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0-alpha.3
+
+* 📦 Update raylabshq/gitea-mirror to 3.51.2 (was 3.51.0).
+
 ## 1.0.0-alpha.2
 
 * Update the base image and packaged dependencies to available release versions; restore reproducible CI builds.
