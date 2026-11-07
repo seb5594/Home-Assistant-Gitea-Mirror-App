@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0-alpha.4
+
+* 📦 Update raylabshq/gitea-mirror to 3.51.3 (was 3.51.2).
+
 ## 1.0.0-alpha.3
 
 * 📦 Update raylabshq/gitea-mirror to 3.51.2 (was 3.51.0).
