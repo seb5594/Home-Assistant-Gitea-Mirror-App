@@ -1,6 +1,6 @@
 name: Gitea Mirror
 description: Mirrors your GitHub, GitLab or Gitea repositories to your own Gitea and keeps them up to date, with the original web interface inside Home Assistant.
-version: "1.0.0-alpha.4"
+version: "1.0.0-alpha.5"
 slug: gitea_mirror
 stage: experimental
 init: false
