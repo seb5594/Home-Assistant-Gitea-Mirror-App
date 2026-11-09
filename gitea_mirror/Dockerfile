@@ -59,7 +59,7 @@ ENV NODE_ENV=production \
     PORT=8099 \
     DATABASE_URL=file:data/gitea-mirror.db
 
-ARG BUILD_VERSION=1.0.0-alpha.5
+ARG BUILD_VERSION=1.0.0-alpha.6
 ARG BUILD_ARCH=amd64
 RUN mkdir -p /etc/gitea-mirror && echo "${BUILD_VERSION}" >/etc/gitea-mirror/version
 LABEL io.hass.version="${BUILD_VERSION}" \
