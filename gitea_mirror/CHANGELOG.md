@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0-alpha.6
+
+* Dependencies: Update ghcr.io/home-assistant/base Docker tag to v3.24-2026.11.0.
+
 ## 1.0.0-alpha.5
 
 * 📦 Update raylabshq/gitea-mirror to 3.51.5 (was 3.51.3).
