@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.51.7
+
+* 📦 Update raylabshq/gitea-mirror to 3.51.7 (was 3.51.6).
+
 ## 3.51.6
 
 * Match the app version to the pinned upstream image version (3.51.6); the packaged upstream software is unchanged.
