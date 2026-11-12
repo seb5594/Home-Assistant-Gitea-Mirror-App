@@ -10,7 +10,7 @@
   "labels": [
     "dependencies"
   ],
-  "branchPrefix": "feature-",
+  "branchPrefix": "feat/",
   "baseBranchPatterns": [
     "$default"
   ],
@@ -76,6 +76,19 @@
         "repology"
       ],
       "versioning": "loose"
+    },
+    {
+      "description": "Major Docker updates require dashboard approval and manual merge",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "dependencyDashboardApproval": true,
+      "automerge": false,
+      "groupName": null,
+      "separateMajorMinor": true
     }
   ],
   "customManagers": [

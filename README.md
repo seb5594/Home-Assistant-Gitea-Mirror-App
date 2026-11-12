@@ -11,7 +11,7 @@
   <a href="https://paypal.me/seb5594"><img src="https://img.shields.io/static/v1?label=Support&amp;message=PayPal&amp;color=0070BA&amp;logo=paypal&amp;logoColor=white&amp;style=for-the-badge" alt="PayPal" height="40"></a>
   <a href="https://buymeacoffee.com/seb5594"><img src="https://img.shields.io/static/v1?label=Support&amp;message=Buy%20Me%20a%20Coffee&amp;color=FFDD00&amp;logo=buy-me-a-coffee&amp;logoColor=black&amp;style=for-the-badge" alt="Buy Me a Coffee" height="40"></a><br>
   <a href="https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fseb5594%2FHome-Assistant-Apps"><img src="https://img.shields.io/static/v1?label=Home%20Assistant&amp;message=Add%20app%20repository&amp;color=18BCF2&amp;logo=homeassistant&amp;logoColor=white&amp;style=for-the-badge" alt="Home Assistant" height="28"></a>
-  <a href="https://github.com/seb5594/Home-Assistant-Gitea-Mirror-App/releases/tag/v1.0.0-alpha.5"><img src="https://img.shields.io/static/v1?label=version&amp;message=Alpha%205&amp;color=1877A5&amp;style=for-the-badge" alt="version" height="28"></a>
+  <a href="https://github.com/seb5594/Home-Assistant-Gitea-Mirror-App/releases/tag/v3.51.6"><img src="https://img.shields.io/static/v1?label=version&amp;message=3.51.6&amp;color=1877A5&amp;style=for-the-badge" alt="version" height="28"></a>
   <img src="https://img.shields.io/static/v1?label=image%20pulls&amp;message=24&amp;color=1877A5&amp;style=for-the-badge" alt="image pulls" height="28"><br>
   <img src="https://img.shields.io/static/v1?label=arch%20%26%20size&amp;message=amd64%20545.2%20%C2%B7%20aarch64%20544.0%20MiB&amp;color=157F71&amp;style=flat" alt="arch &amp; size" height="20">
   <img src="https://img.shields.io/static/v1?label=stage&amp;message=experimental&amp;color=2F855A&amp;style=flat" alt="stage" height="20">
@@ -27,8 +27,8 @@ Brings [Gitea Mirror](https://github.com/RayLabsHQ/gitea-mirror) to Home Assista
 repositories from GitHub, GitLab or another Gitea to your own Gitea and keeps them up to date. The
 original web interface is the page of the app, so there is nothing to open on your network.
 
-> **Pre-release.** The versions are Alpha pre-releases: tested against a real Gitea, not yet on many
-> installations. Please report what you see.
+> **Experimental Home Assistant wrapper.** The app version follows the packaged upstream image.
+> This does not change the wrapper's testing status. Please report what you see.
 
 * **Inside Home Assistant.** The web interface opens through ingress and signs you in with your
   Home Assistant account.
@@ -39,7 +39,7 @@ original web interface is the page of the app, so there is nothing to open on yo
   configuration page, in English and German. What you leave empty stays in the hands of the web
   interface.
 * **Pinned and followed.** The release of Gitea Mirror is pinned, never `latest`. A scheduled
-  workflow follows the releases of the original project and turns each into a new version of this app.
+  workflow follows minor and patch releases within the current major and uses the same app version.
 
 ## Install
 
@@ -78,9 +78,8 @@ gitea_mirror/
 The runtime test starts the real application behind a fake ingress path, signs in with the headers
 Home Assistant adds and gives it its configuration. It also checks that every variable in
 `env-map.json` is still read by the release in the image, so an upstream rename fails the build and
-not an installation. A new release of Gitea Mirror is picked up by `.github/scripts/upstream.py`:
-it changes the pin in the `Dockerfile`, raises the app version and adds a changelog entry. Renovate
-pull requests for the base image and the Alpine packages get their version bump the same way.
+not an installation. The shared engine's `.scripts/upstream.py` updates the primary image pin,
+synchronizes the app version, and adds a changelog entry. Major updates require approval as described below.
 
 <!-- support:begin (generated, shared text) -->
 ## Say thanks
@@ -99,3 +98,9 @@ If my work helped you or turned out to be useful, show your appreciation with a 
 
 Published under the [MIT License](LICENSE).
 <!-- license:end -->
+
+## Upstream versions and update approval
+
+The app version and Dockerfile `BUILD_VERSION` match `GITEA_MIRROR_VERSION` without a leading `v`. The daily follower applies only minor and patch releases within the installed upstream major. Major Docker updates first wait for your approval in Renovate's **Dependency Dashboard**; after approval, review the generated PR and upstream breaking changes, then merge it manually. Automerge is explicitly disabled for those major PRs.
+
+The policy lives in `.github/upstream.json` and is enforced by the shared engine, including when managed Renovate files are regenerated. Dependabot handles GitHub Actions only. Base-image or package-only updates do not invent a new upstream version; they are included in the next upstream app release. Historical Alpha versions remain in the changelog.
