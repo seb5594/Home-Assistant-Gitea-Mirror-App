@@ -16,13 +16,14 @@ FROM ${BUILD_FROM}
 
 # Alpine's busybox is built without the httpd applet and sqlite3; git and git-lfs are what the
 # application shells out to (pre-sync backups, push targets, LFS). bun needs the C++ runtime.
+# Replaced unavailable Alpine pin: git=2.54.0-r0
 RUN apk add --no-cache \
     # renovate: datasource=repology depName=alpine_3_24/libstdc++
     libstdc++=15.2.0-r5 \
     # renovate: datasource=repology depName=alpine_3_24/libgcc
     libgcc=15.2.0-r5 \
     # renovate: datasource=repology depName=alpine_3_24/git
-    git=2.54.0-r0 \
+    git=2.54.1-r0 \
     # renovate: datasource=repology depName=alpine_3_24/git-lfs
     git-lfs=3.7.1-r2 \
     # renovate: datasource=repology depName=alpine_3_24/sqlite
