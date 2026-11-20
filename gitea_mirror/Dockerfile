@@ -1,10 +1,11 @@
-ARG BUILD_FROM=ghcr.io/seb5594/home-assistant-base:3.24-2026.11.0@sha256:d116b9e5b612e6fcd997c86642d21b61953fcbe390c39c9b03443a577ed5e2a6
+ARG BUILD_FROM=ghcr.io/seb5594/home-assistant-base:3.24-2026.11.0
 
 # The official image holds the application: the compiled web interface, its dependencies and the
 # database migrations. Only those files are taken from it. The Debian system underneath is not,
 # because the app is meant to run on the Home Assistant base image with bashio and s6-overlay.
 # renovate: datasource=docker depName=ghcr.io/raylabshq/gitea-mirror
 ARG GITEA_MIRROR_VERSION=v3.54.0
+
 # The runtime in its Alpine (musl) build; upstream runs on the same bun release.
 # renovate: datasource=docker depName=docker.io/oven/bun
 ARG BUN_VERSION=1.4.4-alpine
@@ -16,22 +17,15 @@ FROM ${BUILD_FROM}
 
 # Alpine's busybox is built without the httpd applet and sqlite3; git and git-lfs are what the
 # application shells out to (pre-sync backups, push targets, LFS). bun needs the C++ runtime.
-# Replaced unavailable Alpine pin: git=2.54.0-r0
+
 RUN apk add --no-cache \
-    # renovate: datasource=repology depName=alpine_3_24/libstdc++
-    libstdc++=15.2.0-r5 \
-    # renovate: datasource=repology depName=alpine_3_24/libgcc
-    libgcc=15.2.0-r5 \
-    # renovate: datasource=repology depName=alpine_3_24/git
-    git=2.54.1-r0 \
-    # renovate: datasource=repology depName=alpine_3_24/git-lfs
-    git-lfs=3.7.1-r2 \
-    # renovate: datasource=repology depName=alpine_3_24/sqlite
-    sqlite=3.53.4-r0 \
-    # renovate: datasource=repology depName=alpine_3_24/curl
-    curl=8.23.0-r0 \
-    # renovate: datasource=repology depName=alpine_3_24/jq
-    jq=1.8.2-r0 \
+    libstdc++ \
+    libgcc \
+    git \
+    git-lfs \
+    sqlite \
+    curl \
+    jq \
     && git lfs install --system \
     && addgroup -S -g 1001 gitea-mirror \
     && adduser -S -D -H -u 1001 -G gitea-mirror -h /data/home gitea-mirror
@@ -44,6 +38,7 @@ COPY --from=gitea-mirror /app/node_modules ./node_modules
 COPY --from=gitea-mirror /app/dist ./dist
 COPY --from=gitea-mirror /app/drizzle ./drizzle
 COPY --from=gitea-mirror /app/package.json ./package.json
+
 # The application keeps its database and secrets in data/; Home Assistant keeps /data.
 RUN ln -s /data /app/data
 
@@ -60,13 +55,12 @@ ENV NODE_ENV=production \
     PORT=8099 \
     DATABASE_URL=file:data/gitea-mirror.db
 
-# Replaced independent app version: ARG BUILD_VERSION=1.0.0-alpha.6
 ARG BUILD_VERSION=3.54.0
-ARG BUILD_ARCH=amd64
 RUN mkdir -p /etc/gitea-mirror && echo "${BUILD_VERSION}" >/etc/gitea-mirror/version
 LABEL io.hass.version="${BUILD_VERSION}" \
     io.hass.type="addon" \
-    io.hass.arch="${BUILD_ARCH}" \
+    org.opencontainers.image.title="Home Assistant App: Gitea Mirror" \
+    org.opencontainers.image.version="${BUILD_VERSION}" \
     org.opencontainers.image.source="https://github.com/seb5594/Home-Assistant-Gitea-Mirror-App"
 
 HEALTHCHECK --interval=1m --timeout=10s --start-period=1m --retries=3 \
