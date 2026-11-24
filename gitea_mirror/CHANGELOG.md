@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.56.1
+
+* 📦 Update raylabshq/gitea-mirror to 3.56.1 (was 3.54.0).
+
 ## 3.54.0
 
 * 📦 Update raylabshq/gitea-mirror to 3.54.0 (was 3.53.0).
